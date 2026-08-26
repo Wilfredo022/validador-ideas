@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f3f4fa;
+  --color-foreground: #16161f;
+  --color-card: #ffffff;
+  --color-muted: #eef0f6;
+  --color-muted-foreground: #6b7288;
+  --color-border: #e6e8f2;
+  --color-primary: #6c5ce7;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #f5b942;
+  --color-sidebar: #1c1c28;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: 0 10px 40px rgba(22, 22, 31, 0.06);
+  --shadow-float: 0 16px 48px rgba(108, 92, 231, 0.18);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background:
+    radial-gradient(1100px 520px at 92% -8%, rgba(108, 92, 231, 0.1), transparent 52%),
+    radial-gradient(720px 380px at 0% 100%, rgba(245, 185, 66, 0.08), transparent 48%),
+    var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 22%, white);
+  color: var(--color-foreground);
+}
+
+@layer components {
+  .card {
+    @apply rounded-[22px] border border-border bg-card p-5 shadow-[0_10px_40px_rgba(22,22,31,0.06)] sm:p-6;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition disabled:pointer-events-none disabled:opacity-45;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white shadow-[0_10px_24px_rgba(108,92,231,0.28)] hover:brightness-110 active:brightness-95;
+  }
+
+  .btn-ghost {
+    @apply border border-border bg-card text-foreground hover:bg-muted;
+  }
+
+  .btn-soft {
+    @apply bg-primary/10 text-primary hover:bg-primary/15;
+  }
+
+  .input {
+    @apply w-full rounded-2xl border border-border bg-muted/70 px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:bg-card focus:ring-4 focus:ring-primary/12;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .chip {
+    @apply inline-flex cursor-pointer items-center rounded-full px-3 py-1.5 text-xs font-semibold transition;
+  }
+
+  .chip-on {
+    @apply bg-primary text-white shadow-md shadow-primary/20;
+  }
+
+  .chip-off {
+    @apply bg-muted text-muted-foreground hover:bg-border hover:text-foreground;
+  }
+
+  .surface {
+    @apply rounded-2xl border border-border bg-muted/60;
+  }
+
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.45s ease both;
+}

@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Domain {
+  SOFTWARE
+  PHYSICAL
+}
+
+enum AgentName {
+  INVESTIGADOR
+  VISIONARIO
+  INQUISIDOR
+  CAPITALISTA
+  JUEZ
+  ESTRATEGA
+  ARQUITECTO
+}
+
+enum Verdict {
+  DESCARTAR
+  REQUIERE_PIVOTE
+  APROBADO
+}
+
+enum IdeaStage {
+  DISCOVERY
+  READY
+}
+
+model Idea {
+  id               String    @id @default(cuid())
+  title            String
+  description      String
+  domain           Domain
+  stage            IdeaStage @default(READY)
+  score            Int       @default(0)
+  verdict          Verdict?
+  interviewDone    Boolean   @default(false)
+  interviewSkipped Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  refinements      RefinementMessage[]
+  debates          Debate[]
+  research         MarketResearch[]
+
+  @@index([score])
+}
+
+model MarketResearch {
+  id         String   @id @default(cuid())
+  ideaId     String
+  report     Json
+  queries    Json?
+  rawSources Json?
+  status     String   @default("COMPLETE")
+  model      String?
+  createdAt  DateTime @default(now())
+  idea       Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId, createdAt])
+}
+
+model RefinementMessage {
+  id        String   @id @default(cuid())
+  ideaId    String
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId, createdAt])
+}
+
+model Debate {
+  id        String   @id @default(cuid())
+  ideaId    String
+  round     Int      @default(1)
+  context   String?
+  score     Int?
+  verdict   Verdict?
+  summary   String?
+  status    String   @default("RUNNING")
+  createdAt DateTime @default(now())
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  agents    AgentResult[]
+  pivots    PivotOption[]
+
+  @@index([ideaId, round])
+}
+
+model AgentResult {
+  id        String    @id @default(cuid())
+  debateId  String
+  agent     AgentName
+  output    Json
+  model     String
+  createdAt DateTime  @default(now())
+  debate    Debate    @relation(fields: [debateId], references: [id], onDelete: Cascade)
+
+  @@index([debateId, agent])
+}
+
+model PivotOption {
+  id          String   @id @default(cuid())
+  debateId    String
+  title       String
+  description String
+  rationale   String
+  chosen      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  debate      Debate   @relation(fields: [debateId], references: [id], onDelete: Cascade)
+}
+
+model AgentModelConfig {
+  agent    String @id
+  provider String
+  model    String
+  mode     String
+}
