@@ -135,7 +135,3 @@ prisma/
   migrations/         # Migraciones de base de datos
 scripts/              # backup.mjs, keepalive.mjs, keepalive-loop.mjs
 ```
-
-## Licencia
-
-Uso privado. Este proyecto es un prototipo para validación personal de ideas.
